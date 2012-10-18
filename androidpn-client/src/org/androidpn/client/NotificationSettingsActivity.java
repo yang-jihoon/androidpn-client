@@ -15,14 +15,20 @@
  */
 package org.androidpn.client;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.widget.EditText;
 
 /** 
  * Activity for displaying the notification setting view.
@@ -99,10 +105,44 @@ public class NotificationSettingsActivity extends PreferenceActivity {
         vibratePref.setSummary("Vibrate the phone for notifications");
         vibratePref.setDefaultValue(Boolean.TRUE);
         // vibratePref.setDependency(Constants.SETTINGS_NOTIFICATION_ENABLED);
+        
+        EditTextPreference idPrefreference = new EditTextPreference(this);
+        idPrefreference.setTitle("User ID");
+        idPrefreference.setKey(Constants.XMPP_USERNAME);
+        
+        SharedPreferences sharedPrefs = getSharedPreferences(Constants.SHARED_PREFERENCE_NAME,
+                Context.MODE_PRIVATE);
+        idPrefreference.setSummary(sharedPrefs.getString(Constants.XMPP_USERNAME, ""));
+        idPrefreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference,
+                    Object newValue) {
+            	preference.setSummary((String)newValue);
+                return true;
+            }
+        });
 
+        EditTextPreference pwPrefreference = new EditTextPreference(this);
+        pwPrefreference.setTitle("Password");
+        pwPrefreference.setKey(Constants.XMPP_PASSWORD);
+        EditText pwEditText = pwPrefreference.getEditText();
+        pwEditText.setTransformationMethod(new PasswordTransformationMethod());
+        pwPrefreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference,
+                    Object newValue) {
+                        	
+                ApnActivity.serviceManager.stopService();
+                ApnActivity.serviceManager.startService();
+                                               
+                return true;
+            }
+        });
+       
+                
         root.addPreference(notifyPref);
         root.addPreference(soundPref);
         root.addPreference(vibratePref);
+        root.addPreference(idPrefreference);
+        root.addPreference(pwPrefreference);
 
         //        prefCat.addPreference(notifyPref);
         //        prefCat.addPreference(soundPref);

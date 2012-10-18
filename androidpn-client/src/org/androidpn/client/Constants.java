@@ -57,6 +57,7 @@ public class Constants {
     public static final String SETTINGS_VIBRATE_ENABLED = "SETTINGS_VIBRATE_ENABLED";
 
     public static final String SETTINGS_TOAST_ENABLED = "SETTINGS_TOAST_ENABLED";
+    
 
     // NOTIFICATION FIELDS
 

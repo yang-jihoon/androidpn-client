@@ -106,7 +106,7 @@ public class NotificationDetailsActivity extends Activity {
         // textTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         textTitle.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         textTitle.setTextColor(0xff000000);
-        textTitle.setGravity(Gravity.CENTER);
+        textTitle.setGravity(Gravity.LEFT);
 
         layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT,
@@ -120,7 +120,7 @@ public class NotificationDetailsActivity extends Activity {
         textDetails.setTextSize(14);
         // textTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
         textDetails.setTextColor(0xff333333);
-        textDetails.setGravity(Gravity.CENTER);
+        textDetails.setGravity(Gravity.LEFT);
 
         layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.FILL_PARENT,

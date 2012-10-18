@@ -35,7 +35,7 @@ public final class ServiceManager {
             .makeLogTag(ServiceManager.class);
 
     private Context context;
-
+    
     private SharedPreferences sharedPrefs;
 
     private Properties props;
@@ -82,8 +82,10 @@ public final class ServiceManager {
         Editor editor = sharedPrefs.edit();
         editor.putString(Constants.API_KEY, apiKey);
         editor.putString(Constants.VERSION, version);
-        editor.putString(Constants.XMPP_HOST, xmppHost);
-        editor.putInt(Constants.XMPP_PORT, Integer.parseInt(xmppPort));
+        if (sharedPrefs.contains(Constants.XMPP_HOST)&& sharedPrefs.contains(Constants.XMPP_PORT)) {
+            editor.putString(Constants.XMPP_HOST, xmppHost);
+            editor.putInt(Constants.XMPP_PORT, Integer.parseInt(xmppPort));
+        }
         editor.putString(Constants.CALLBACK_ACTIVITY_PACKAGE_NAME,
                 callbackActivityPackageName);
         editor.putString(Constants.CALLBACK_ACTIVITY_CLASS_NAME,
@@ -195,4 +197,7 @@ public final class ServiceManager {
         context.startActivity(intent);
     }
 
+    public Context getContext() {
+    	return context;
+    }
 }

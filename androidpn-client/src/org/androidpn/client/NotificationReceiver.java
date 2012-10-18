@@ -67,6 +67,16 @@ public final class NotificationReceiver extends BroadcastReceiver {
             Notifier notifier = new Notifier(context);
             notifier.notify(notificationId, notificationApiKey,
                     notificationTitle, notificationMessage, notificationUri);
+            
+            DatabaseAdapter databaseAdapter = new DatabaseAdapter(context).open();
+            NotificationIQ iq = new NotificationIQ();
+            iq.setTitle(notificationTitle);
+            iq.setMessage(notificationMessage);
+            
+            databaseAdapter.open();
+            databaseAdapter.insert(iq);
+            databaseAdapter.close();
+            
         }
 
         //        } else if (Constants.ACTION_NOTIFICATION_CLICKED.equals(action)) {

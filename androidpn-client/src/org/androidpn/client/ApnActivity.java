@@ -19,37 +19,69 @@ import org.androidpn.client.R;
 import org.androidpn.client.ServiceManager;
 
 import android.app.Activity;
+import android.app.ListActivity;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 /**
  * This is an androidpn client application.
  * 
  * @author Sehwan Noh (devnoh@gmail.com)
  */
-public class ApnActivity extends Activity {
+public class ApnActivity extends ListActivity {
+	
+	public static ServiceManager serviceManager;
+	private Cursor mCursor = null;
+	private DatabaseAdapter databaseAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.d("ApnActivity", "onCreate()...");
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-
-        // Settings
-        Button okButton = (Button) findViewById(R.id.btn_settings);
-        okButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                ServiceManager.viewNotificationSettings(ApnActivity.this);
-            }
-        });
+        super.onCreate(savedInstanceState);   
 
         // Start the service
-        ServiceManager serviceManager = new ServiceManager(this);
+        serviceManager = new ServiceManager(this);
         serviceManager.setNotificationIcon(R.drawable.notification);
-        serviceManager.startService();
+        serviceManager.startService();    
+        
+        databaseAdapter = new DatabaseAdapter(this).open();
+        mCursor = databaseAdapter.getAll();
+		
+		ListAdapter adapter = new SimpleCursorAdapter(this, 
+				R.layout.main,
+				mCursor,
+				new String[] {DatabaseAdapter.TITLE, DatabaseAdapter.MESSAGE, DatabaseAdapter.DATE},
+				new int[] {R.id.title, R.id.message, R.id.date});
+		
+		setListAdapter(adapter);
+		registerForContextMenu(getListView());
     }
+    
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 
+		databaseAdapter.close();
+		mCursor.close();
+		
+	}
+	
+	// 메뉴키 설정
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		
+		   ServiceManager.viewNotificationSettings(ApnActivity.this);
+		   
+		return true;
+		
+	}
 }
