@@ -18,9 +18,8 @@ package org.androidpn.client;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.sax.StartElementListener;
 import android.util.Log;
+import android.widget.Toast;
 
 /** 
  * Broadcast receiver that handles push notification messages from the server.
@@ -33,14 +32,11 @@ public final class NotificationReceiver extends BroadcastReceiver {
     private static final String LOGTAG = LogUtil
             .makeLogTag(NotificationReceiver.class);
 
-//    private NotificationService notificationService;
+    private NotificationService notificationService;
 
-    public NotificationReceiver() {
+    public NotificationReceiver(NotificationService notificationService) {
+        this.notificationService = notificationService;
     }
-
-    //    public NotificationReceiver(NotificationService notificationService) {
-    //        this.notificationService = notificationService;
-    //    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -81,7 +77,14 @@ public final class NotificationReceiver extends BroadcastReceiver {
             databaseAdapter.close();
       
             //화면갱신
-            ((ApnActivity)(ApnActivity.context)).onResume();        
+            ((ApnActivity)(ApnActivity.context)).onResume();  
+        } else if (Constants.ACTION_NOTIFICATION_RECONNECTION.equals(action)) {
+        	notificationService.disconnect();         	
+        	notificationService.connect();
+        	        	 
+        } else if (Constants.ACTION_NOTIFICATION_TOAST.equals(action)) {
+        	Toast toast = Toast.makeText(context,intent.getStringExtra(Constants.TOAST_TEXT),Toast.LENGTH_SHORT);
+        	toast.show();
         }
         
         

@@ -30,11 +30,11 @@ import org.jivesoftware.smack.filter.PacketTypeFilter;
 import org.jivesoftware.smack.provider.ProviderManager;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * This class is to manage the XMPP connection between client and server.
@@ -87,8 +87,8 @@ public class XmppManager {
 
         xmppHost = sharedPrefs.getString(Constants.XMPP_HOST, "localhost");
         xmppPort = sharedPrefs.getInt(Constants.XMPP_PORT, 5222);
-        username = sharedPrefs.getString(Constants.XMPP_USERNAME, "");
-        password = sharedPrefs.getString(Constants.XMPP_PASSWORD, "");
+    	setUsername(sharedPrefs.getString(Constants.XMPP_USERNAME, ""));
+    	setPassword(sharedPrefs.getString(Constants.XMPP_PASSWORD, ""));
 
         connectionListener = new PersistentConnectionListener(this);
         notificationPacketListener = new NotificationPacketListener(this);
@@ -258,10 +258,10 @@ public class XmppManager {
                     taskTracker.decrease();
                 }
             } else {
-                taskList.add(runnable);
+        		taskList.add(runnable);
             }
-        }
         Log.d(LOGTAG, "addTask(runnable)... done");
+        }
     }
 
     private void removeAccount() {
@@ -311,12 +311,10 @@ public class XmppManager {
                     Log.e(LOGTAG, "XMPP connection failed", e);
                 }
 
-                xmppManager.runTask();
-
             } else {
                 Log.i(LOGTAG, "XMPP connected already");
-                xmppManager.runTask();
             }
+            xmppManager.runTask();
         }
     }
 
@@ -397,8 +395,8 @@ public class XmppManager {
                 Log.i(LOGTAG, "Account not registered");
             } else {
                 Log.i(LOGTAG, "Account registered already");
-                xmppManager.runTask();
             }
+            xmppManager.runTask();
         }
     }
 
@@ -417,8 +415,10 @@ public class XmppManager {
             Log.i(LOGTAG, "LoginTask.run()...");
 
             if (!xmppManager.isAuthenticated()) {
-                Log.d(LOGTAG, "username=" + username);
-                Log.d(LOGTAG, "password=" + password);
+            	xmppManager.setUsername(sharedPrefs.getString(Constants.XMPP_USERNAME, ""));
+            	xmppManager.setPassword(sharedPrefs.getString(Constants.XMPP_PASSWORD, ""));
+                Log.d(LOGTAG, "username=" + xmppManager.getUsername());
+                Log.d(LOGTAG, "password=" + xmppManager.getPassword());
 
                 try {
                     xmppManager.getConnection().login(
@@ -443,8 +443,9 @@ public class XmppManager {
 
                     xmppManager.runTask();
                     
-                	Toast toast = Toast.makeText(context,"Login Success!!",Toast.LENGTH_LONG);
-                	toast.show();
+                	Intent intent = new Intent(Constants.ACTION_NOTIFICATION_TOAST);
+                	intent.putExtra(Constants.TOAST_TEXT, Constants.LOGIN_SUCCESS_TEXT);
+                	context.sendBroadcast(intent);
 
                 } catch (XMPPException e) {
                     Log.e(LOGTAG, "LoginTask.run()... xmpp error");
@@ -455,15 +456,12 @@ public class XmppManager {
                     if (errorMessage != null
                             && errorMessage
                                     .contains(INVALID_CREDENTIALS_ERROR_CODE)) {
-                        //xmppManager.reregisterAccount();
-                    	//TODO alert Message !!! Login Fail Check ID OR PW
-//                    	AlertDialog.Builder errorAlert = new AlertDialog.Builder(null);
-//                    	errorAlert.setMessage("Login Fail Check ID OR PW");
-//                    	errorAlert.setPositiveButton(android.R.string.ok, null);
-//                    	errorAlert.setTitle("Login Fail");
-//                    	errorAlert.show();
-                    	Toast toast = Toast.makeText(context,"Login Fail Check ID OR PW",Toast.LENGTH_LONG);
-                    	toast.show();
+                        
+                    	Intent intent = new Intent(Constants.ACTION_NOTIFICATION_TOAST);
+                    	intent.putExtra(Constants.TOAST_TEXT, Constants.LOGIN_FAIL_TEXT);
+                    	context.sendBroadcast(intent);
+                    	
+                        xmppManager.runTask();
                                        	
                         return;
                     }

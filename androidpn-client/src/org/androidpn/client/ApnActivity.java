@@ -35,7 +35,6 @@ import android.widget.ListView;
 public class ApnActivity extends Activity {
 	
 	public static Context context;
-	public static ServiceManager serviceManager;
 	private Cursor mCursor = null;
 	private DatabaseAdapter databaseAdapter;
 
@@ -48,7 +47,7 @@ public class ApnActivity extends Activity {
         ApnActivity.context = this;
         
         // Start the service
-        serviceManager = new ServiceManager(this);
+        ServiceManager serviceManager = new ServiceManager(this);
         serviceManager.setNotificationIcon(R.drawable.notification);
         serviceManager.startService();    
         

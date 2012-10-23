@@ -16,6 +16,7 @@
 package org.androidpn.client;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -128,8 +129,8 @@ public class NotificationSettingsActivity extends PreferenceActivity {
             public boolean onPreferenceChange(Preference preference,
                     Object newValue) {
                         	
-                ApnActivity.serviceManager.stopService();
-                ApnActivity.serviceManager.startService();
+            	Intent intent = new Intent(Constants.ACTION_NOTIFICATION_RECONNECTION);
+            	sendBroadcast(intent);
                                                               
                 return true;
             }

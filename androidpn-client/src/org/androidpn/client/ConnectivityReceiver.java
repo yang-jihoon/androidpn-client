@@ -48,6 +48,7 @@ public class ConnectivityReceiver extends BroadcastReceiver {
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        Log.d(LOGTAG, "Network Info  = " + networkInfo);
 
         if (networkInfo != null) {
             Log.d(LOGTAG, "Network Type  = " + networkInfo.getTypeName());

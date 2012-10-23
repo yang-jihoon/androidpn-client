@@ -80,6 +80,12 @@ public class Constants {
     public static final String ACTION_NOTIFICATION_CLEARED = "org.androidpn.client.NOTIFICATION_CLEARED";
 
     public static final String ACTION_NOTIFICATION_RECONNECTION = "org.androidpn.client.NOTIFICATION_RECONNECTION";
-    
 
+    public static final String ACTION_NOTIFICATION_TOAST = "org.androidpn.client.NOTIFICATION_TOAST";
+    
+    public static final String TOAST_TEXT = "TOAST_TEXT";
+    public static final String LOGIN_SUCCESS_TEXT = "Logged In Successfully";
+    public static final String LOGIN_FAIL_TEXT = "Login Fail Check ID OR Password";
+    
+    public static final String ACTION_CONNECTIVITY_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 }

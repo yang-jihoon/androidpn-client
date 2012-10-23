@@ -71,7 +71,7 @@ public class NotificationService extends Service {
     private String deviceId;
 
     public NotificationService() {
-        notificationReceiver = new NotificationReceiver();
+        notificationReceiver = new NotificationReceiver(this);
         connectivityReceiver = new ConnectivityReceiver(this);
         phoneStateListener = new PhoneStateChangeListener(this);
         executorService = Executors.newSingleThreadExecutor();
@@ -201,6 +201,8 @@ public class NotificationService extends Service {
         filter.addAction(Constants.ACTION_SHOW_NOTIFICATION);
         filter.addAction(Constants.ACTION_NOTIFICATION_CLICKED);
         filter.addAction(Constants.ACTION_NOTIFICATION_CLEARED);
+        filter.addAction(Constants.ACTION_NOTIFICATION_RECONNECTION);
+        filter.addAction(Constants.ACTION_NOTIFICATION_TOAST);
         registerReceiver(notificationReceiver, filter);
     }
 
@@ -215,6 +217,7 @@ public class NotificationService extends Service {
         IntentFilter filter = new IntentFilter();
         // filter.addAction(android.net.wifi.WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(android.net.ConnectivityManager.CONNECTIVITY_ACTION);
+        
         registerReceiver(connectivityReceiver, filter);
     }
 
