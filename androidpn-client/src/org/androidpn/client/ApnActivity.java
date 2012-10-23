@@ -19,24 +19,22 @@ import org.androidpn.client.R;
 import org.androidpn.client.ServiceManager;
 
 import android.app.Activity;
-import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 /**
  * This is an androidpn client application.
  * 
  * @author Sehwan Noh (devnoh@gmail.com)
  */
-public class ApnActivity extends ListActivity {
+public class ApnActivity extends Activity {
 	
+	public static Context context;
 	public static ServiceManager serviceManager;
 	private Cursor mCursor = null;
 	private DatabaseAdapter databaseAdapter;
@@ -47,6 +45,8 @@ public class ApnActivity extends ListActivity {
 
         super.onCreate(savedInstanceState);   
 
+        ApnActivity.context = this;
+        
         // Start the service
         serviceManager = new ServiceManager(this);
         serviceManager.setNotificationIcon(R.drawable.notification);
@@ -55,16 +55,25 @@ public class ApnActivity extends ListActivity {
         databaseAdapter = new DatabaseAdapter(this).open();
         mCursor = databaseAdapter.getAll();
 		
-		ListAdapter adapter = new SimpleCursorAdapter(this, 
-				R.layout.main,
-				mCursor,
-				new String[] {DatabaseAdapter.TITLE, DatabaseAdapter.MESSAGE, DatabaseAdapter.DATE},
-				new int[] {R.id.title, R.id.message, R.id.date});
+        setContentView(R.layout.main);
+		ListView listView = (ListView) findViewById(R.id.list);
 		
-		setListAdapter(adapter);
-		registerForContextMenu(getListView());
+        ApnListAdapter adapter = new ApnListAdapter(this, mCursor);
+		listView.setAdapter(adapter);
+
+		
     }
     
+        
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		mCursor.requery();
+	}
+
+
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -76,12 +85,14 @@ public class ApnActivity extends ListActivity {
 	
 	// 메뉴키 설정
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
+	public boolean onPrepareOptionsMenu(Menu menu) {
 		
-		   ServiceManager.viewNotificationSettings(ApnActivity.this);
+		Intent intent = new Intent().setClass(ApnActivity.this,
+                NotificationSettingsActivity.class);
+		ApnActivity.this.startActivity(intent);
 		   
 		return true;
 		
 	}
+
 }

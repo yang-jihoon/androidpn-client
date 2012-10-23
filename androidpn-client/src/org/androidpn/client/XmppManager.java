@@ -17,7 +17,6 @@ package org.androidpn.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Future;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -212,10 +211,10 @@ public class XmppManager {
         Log.d(LOGTAG, "runTask()...done");
     }
 
-    private String newRandomUUID() {
-        String uuidRaw = UUID.randomUUID().toString();
-        return uuidRaw.replaceAll("-", "");
-    }
+//    private String newRandomUUID() {
+//        String uuidRaw = UUID.randomUUID().toString();
+//        return uuidRaw.replaceAll("-", "");
+//    }
 
     private boolean isConnected() {
         return connection != null && connection.isConnected();
@@ -443,6 +442,9 @@ public class XmppManager {
                     connection.addPacketListener(packetListener, packetFilter);
 
                     xmppManager.runTask();
+                    
+                	Toast toast = Toast.makeText(context,"Login Success!!",Toast.LENGTH_LONG);
+                	toast.show();
 
                 } catch (XMPPException e) {
                     Log.e(LOGTAG, "LoginTask.run()... xmpp error");
@@ -460,6 +462,8 @@ public class XmppManager {
 //                    	errorAlert.setPositiveButton(android.R.string.ok, null);
 //                    	errorAlert.setTitle("Login Fail");
 //                    	errorAlert.show();
+                    	Toast toast = Toast.makeText(context,"Login Fail Check ID OR PW",Toast.LENGTH_LONG);
+                    	toast.show();
                                        	
                         return;
                     }

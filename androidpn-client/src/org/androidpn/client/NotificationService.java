@@ -135,6 +135,7 @@ public class NotificationService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         Log.d(LOGTAG, "onBind()...");
+                
         return null;
     }
 

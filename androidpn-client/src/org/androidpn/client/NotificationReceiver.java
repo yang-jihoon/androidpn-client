@@ -18,6 +18,8 @@ package org.androidpn.client;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.sax.StartElementListener;
 import android.util.Log;
 
 /** 
@@ -31,7 +33,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
     private static final String LOGTAG = LogUtil
             .makeLogTag(NotificationReceiver.class);
 
-    //    private NotificationService notificationService;
+//    private NotificationService notificationService;
 
     public NotificationReceiver() {
     }
@@ -68,6 +70,7 @@ public final class NotificationReceiver extends BroadcastReceiver {
             notifier.notify(notificationId, notificationApiKey,
                     notificationTitle, notificationMessage, notificationUri);
             
+            //Database에 값 저장
             DatabaseAdapter databaseAdapter = new DatabaseAdapter(context).open();
             NotificationIQ iq = new NotificationIQ();
             iq.setTitle(notificationTitle);
@@ -76,8 +79,12 @@ public final class NotificationReceiver extends BroadcastReceiver {
             databaseAdapter.open();
             databaseAdapter.insert(iq);
             databaseAdapter.close();
-            
+      
+            //화면갱신
+            ((ApnActivity)(ApnActivity.context)).onResume();        
         }
+        
+        
 
         //        } else if (Constants.ACTION_NOTIFICATION_CLICKED.equals(action)) {
         //            String notificationId = intent

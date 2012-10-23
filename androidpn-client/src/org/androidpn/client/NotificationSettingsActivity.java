@@ -15,8 +15,6 @@
  */
 package org.androidpn.client;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -132,7 +130,7 @@ public class NotificationSettingsActivity extends PreferenceActivity {
                         	
                 ApnActivity.serviceManager.stopService();
                 ApnActivity.serviceManager.startService();
-                                               
+                                                              
                 return true;
             }
         });
